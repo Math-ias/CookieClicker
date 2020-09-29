@@ -1,4 +1,4 @@
-package com.cookie.effects;
+package com.cookie;
 
 /**
  * A visitor function to apply different logic for different effect types.

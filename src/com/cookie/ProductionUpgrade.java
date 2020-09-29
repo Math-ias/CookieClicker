@@ -1,6 +1,4 @@
-package com.cookie.effects;
-
-import com.cookie.CookieClicker;
+package com.cookie;
 
 import java.util.Collection;
 

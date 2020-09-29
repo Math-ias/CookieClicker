@@ -1,6 +1,6 @@
-package com.cookie.effects;
+package com.cookie;
 
-import com.cookie.effects.BuildingProductionEffect;
+import com.cookie.BuildingProductionEffect;
 
 import org.junit.jupiter.api.Test;
 

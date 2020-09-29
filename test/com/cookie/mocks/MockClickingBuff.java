@@ -1,7 +1,7 @@
 package com.cookie.mocks;
 
-import com.cookie.effects.ProductionBuff;
-import com.cookie.effects.ProductionEffect;
+import com.cookie.ProductionBuff;
+import com.cookie.ProductionEffect;
 
 import java.util.Collection;
 import java.util.Collections;

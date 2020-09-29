@@ -1,8 +1,5 @@
 package com.cookie;
 
-import com.cookie.effects.ProductionBuff;
-import com.cookie.effects.ProductionUpgrade;
-
 /**
  * Represents a running game of Cookie Clicker queryable for measures, and writeable.
  */

@@ -1,8 +1,8 @@
 package com.cookie.mocks;
 
 import com.cookie.CookieClicker;
-import com.cookie.effects.ProductionEffect;
-import com.cookie.effects.ProductionUpgrade;
+import com.cookie.ProductionEffect;
+import com.cookie.ProductionUpgrade;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -1,7 +1,5 @@
 package com.cookie;
 
-import com.cookie.effects.ProductionBuff;
-import com.cookie.effects.ProductionUpgrade;
 import com.cookie.mocks.MockBuildingType;
 import com.cookie.mocks.MockClickingBuff;
 import com.cookie.mocks.MockProductionUpgrade;

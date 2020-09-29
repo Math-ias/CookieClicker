@@ -1,7 +1,4 @@
-package com.cookie.effects;
-
-import com.cookie.BuildingType;
-import com.cookie.SavedCookieClicker;
+package com.cookie;
 
 /**
  * A production effect applying to the production of a specific building.

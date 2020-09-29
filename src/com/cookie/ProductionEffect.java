@@ -1,4 +1,4 @@
-package com.cookie.effects;
+package com.cookie;
 
 /**
  * An arithmetic effect on in-game production rates.

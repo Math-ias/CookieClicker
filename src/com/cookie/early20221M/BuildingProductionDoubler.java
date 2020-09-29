@@ -1,6 +1,6 @@
 package com.cookie.early20221M;
 
-import com.cookie.effects.BuildingProductionEffect;
+import com.cookie.BuildingProductionEffect;
 import com.cookie.BuildingType;
 import com.cookie.SavedCookieClicker;
 

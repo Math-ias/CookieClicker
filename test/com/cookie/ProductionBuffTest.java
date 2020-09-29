@@ -1,7 +1,7 @@
-package com.cookie.effects;
+package com.cookie;
 
-import com.cookie.effects.ProductionBuff;
-import com.cookie.effects.ProductionEffect;
+import com.cookie.ProductionBuff;
+import com.cookie.ProductionEffect;
 import com.cookie.mocks.MockClickingEffects;
 
 import org.junit.jupiter.api.Test;

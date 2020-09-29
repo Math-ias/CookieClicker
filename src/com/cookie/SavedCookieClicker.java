@@ -1,8 +1,5 @@
 package com.cookie;
 
-import com.cookie.effects.ProductionBuff;
-import com.cookie.effects.ProductionUpgrade;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

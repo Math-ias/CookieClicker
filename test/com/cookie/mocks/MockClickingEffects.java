@@ -1,7 +1,7 @@
 package com.cookie.mocks;
 
 import com.cookie.CookieClicker;
-import com.cookie.effects.ClickingProductionEffect;
+import com.cookie.ClickingProductionEffect;
 
 /**
  * A collection of clicking effects.

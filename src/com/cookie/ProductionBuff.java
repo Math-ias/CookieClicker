@@ -1,4 +1,4 @@
-package com.cookie.effects;
+package com.cookie;
 
 import java.util.Collection;
 import java.util.Optional;

@@ -1,12 +1,5 @@
 package com.cookie;
 
-import com.cookie.effects.BuildingProductionEffect;
-import com.cookie.effects.ClickingProductionEffect;
-import com.cookie.effects.ProductionBuff;
-import com.cookie.effects.ProductionEffect;
-import com.cookie.effects.ProductionEffectVisitor;
-import com.cookie.effects.ProductionUpgrade;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
