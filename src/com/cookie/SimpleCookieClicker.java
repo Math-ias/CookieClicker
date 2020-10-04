@@ -390,10 +390,9 @@ public class SimpleCookieClicker implements CookieClicker {
       return 0;
     } else {
       // The amount refunded is a quarter of the current price.
-      // TODO: Verify this formula on the cookie clicker discord.
-      return Math.ceil(target.unitPrice() * REFUND_REDUCTION
-              * Math.pow(PRICE_GROWTH_FACTOR, targetOwned - amount)
-              * (Math.pow(PRICE_GROWTH_FACTOR, amount) - 1)
+      return -Math.ceil(target.unitPrice() * REFUND_REDUCTION
+              * Math.pow(PRICE_GROWTH_FACTOR, targetOwned + amount)
+              * (Math.pow(PRICE_GROWTH_FACTOR, -amount) - 1)
               / (PRICE_GROWTH_FACTOR - 1));
     }
   }

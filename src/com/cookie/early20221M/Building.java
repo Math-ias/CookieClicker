@@ -3,8 +3,7 @@ package com.cookie.early20221M;
 import com.cookie.BuildingType;
 
 /**
- * A collection of simple buildings in cookie clicker version 2.022. These are the buildings used on
- * the way to baking the first one million cookies.
+ * The necessary building types for simulating early game play.
  */
 public enum Building implements BuildingType {
 
