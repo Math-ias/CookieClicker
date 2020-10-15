@@ -1,7 +1,7 @@
 package com.cookie;
 
 /**
- * A test suite of mixins and custom tets for a SimpleCookieClicker.
+ * A test suite of mixins and custom tests for a SimpleCookieClicker.
  */
 public class SimpleCookieClickerTests implements CookieClickerTest {
   @Override
