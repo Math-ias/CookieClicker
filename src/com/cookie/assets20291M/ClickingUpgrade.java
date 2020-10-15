@@ -1,4 +1,4 @@
-package com.cookie.early20221M;
+package com.cookie.assets20291M;
 
 import com.cookie.CookieClicker;
 import com.cookie.BuildingProductionEffect;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Weirder upgrades involving clicking effects.
+ * The necessary clicking upgrades for early-game play.
  */
 public enum ClickingUpgrade implements ProductionUpgrade {
   PLASTIC_MOUSE(Collections.singleton(ClickingCPSBoost.INSTANCE), 50000),
@@ -64,7 +64,7 @@ public enum ClickingUpgrade implements ProductionUpgrade {
     INSTANCE;
 
     @Override
-    public double getEffect(CookieClicker stats) {
+    public double getNumber(CookieClicker stats) {
       double cps = stats.getBuildingInventory()
               .keySet()
               .stream()
@@ -86,7 +86,7 @@ public enum ClickingUpgrade implements ProductionUpgrade {
     INSTANCE;
 
     @Override
-    public double getEffect(CookieClicker stats) {
+    public double getNumber(CookieClicker stats) {
       Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
       long nonCursors = inventory.entrySet()
               .stream()
@@ -109,7 +109,7 @@ public enum ClickingUpgrade implements ProductionUpgrade {
     INSTANCE;
 
     @Override
-    public double getEffect(SavedCookieClicker stats) {
+    public double getNumber(SavedCookieClicker stats) {
       Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
       long nonCursors = inventory.entrySet()
               .stream()

@@ -10,7 +10,7 @@ public enum MockClickingEffects implements ClickingProductionEffect {
   TIMES2;
 
   @Override
-  public double getEffect(CookieClicker stats) {
+  public double getNumber(CookieClicker stats) {
     return 2;
   }
 

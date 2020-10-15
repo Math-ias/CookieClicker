@@ -63,7 +63,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
   /**
    * Verify warp behavior for a non-trivial case, a non-zero amount of ticks.
    * <p>
-   * This depends on correct getters, measures, setClickingRate, and barterBuildings.
+   * This depends on correct getters, measures, setClickingRate, and transactBuildings.
    */
   @Test
   default void testWarpNonzero() {
@@ -75,9 +75,9 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     // First, we calculate the minimum amount of profit we expect.
     // We attempt to secure a non-zero income for both clicking and building sources.
     BuildingType building = MockBuildingType.RATE1PRICE1;
-    double buildingPrice = impl.getBarteringBuildingAmount(building, BUILDINGS_TO_BUY);
+    double buildingPrice = impl.getTransactionalBuildingAmount(building, BUILDINGS_TO_BUY);
     CookieClicker nonzeroIncome = impl.adjustBank(buildingPrice)
-            .barterBuildings(building, BUILDINGS_TO_BUY)
+            .transactBuildings(building, BUILDINGS_TO_BUY)
             .setClickingRate(CLICKING_RATE);
     double buildingIncome = nonzeroIncome.getRate(building) * TO_WARP;
     double cookieClicks = CLICKING_RATE * TO_WARP;
@@ -102,109 +102,109 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
   // BARTERBUILDINGS
 
   /**
-   * Verify barterBuildings correctly validates the buildingType argument.
+   * Verify transactBuildings correctly validates the buildingType argument.
    */
   @Test
-  default void testBarterBuildingsIllegalBuildingType() {
+  default void testTransactBuildingsIllegalBuildingType() {
     CookieClicker impl = getImplementation();
     assertThrows(NullPointerException.class,
-            () -> impl.barterBuildings(null, 1));
+            () -> impl.transactBuildings(null, 1));
   }
 
   /**
-   * Verify barterBuildings correctly validates the amount parameter in different scenarios.
+   * Verify transactBuildings correctly validates the amount parameter in different scenarios.
    * <p>
-   * This relies on correct adjustBank and getBarteringBuildingAmount.
+   * This relies on correct adjustBank and getTransactionalBuildingAmount.
    */
   @Test
-  default void testBarterBuildingsIllegalAmount() {
+  default void testTransactBuildingsIllegalAmount() {
     final int TO_BUY = 1;
 
     CookieClicker impl = getImplementation();
     BuildingType building = MockBuildingType.RATE1PRICE1;
-    double buildingPrice = impl.getBarteringBuildingAmount(building, TO_BUY);
+    double buildingPrice = impl.getTransactionalBuildingAmount(building, TO_BUY);
     // We adjust our state so that we have not enough cookies.
     CookieClicker noFunds = impl.adjustBank(-impl.getCurrentBank());
 
     // We assume that the implementation does not yet have our mock building.
-    assertThrows(IllegalArgumentException.class, () -> noFunds.barterBuildings(building, TO_BUY));
-    assertThrows(IllegalArgumentException.class, () -> noFunds.barterBuildings(building, -TO_BUY));
+    assertThrows(IllegalArgumentException.class, () -> noFunds.transactBuildings(building, TO_BUY));
+    assertThrows(IllegalArgumentException.class, () -> noFunds.transactBuildings(building, -TO_BUY));
 
     // What if we had enough cookies to buy? But not the inventory to sell one more than we bought?
     CookieClicker bought = noFunds.adjustBank(buildingPrice)
-            .barterBuildings(building, TO_BUY);
+            .transactBuildings(building, TO_BUY);
 
     assertThrows(IllegalArgumentException.class,
-            () -> bought.barterBuildings(building, -TO_BUY - 1));
+            () -> bought.transactBuildings(building, -TO_BUY - 1));
   }
 
   /**
-   * Verify the corner case of using barterBuildings with an amount of zero.
+   * Verify the corner case of using transactBuildings with an amount of zero.
    * <p>
    * This test relies on correct getter behavior.
    */
   @Test
-  default void testBarterBuildingsZero() {
+  default void testTransactBuildingsZero() {
     CookieClicker impl = getImplementation();
     final BuildingType BUILDING = MockBuildingType.RATE1PRICE1;
-    CookieClicker zeroPurchase = impl.barterBuildings(BUILDING, 0);
+    CookieClicker zeroPurchase = impl.transactBuildings(BUILDING, 0);
     assertEquals(impl.getBuildingInventory().getOrDefault(BUILDING, 0),
             zeroPurchase.getBuildingInventory().getOrDefault(BUILDING, 0));
   }
 
   /**
-   * Verify barterBuildings correctly behaves when purchasing and refunding buildings.
+   * Verify transactBuildings correctly behaves when purchasing and refunding buildings.
    * <p>
    * This relies on correct getters, and adjustBank.
    */
   @Test
-  default void testBarterBuildingsBuyingAndSelling() {
+  default void testTransactBuildingsBuyingAndSelling() {
     final int TO_BUY_FIRST = 1;
     final int TO_BUY_SECOND = 2;
 
     // First we make one purchase.
     CookieClicker impl = getImplementation();
     BuildingType building = MockBuildingType.RATE1PRICE1;
-    double firstPrice = impl.getBarteringBuildingAmount(building, TO_BUY_FIRST);
+    double firstPrice = impl.getTransactionalBuildingAmount(building, TO_BUY_FIRST);
     // I do have an assumption here that price won't change after adjusting the bank account.
     // I also assume the mock building isn't in inventory.
     CookieClicker firstPurchaseReady = impl.adjustBank(firstPrice);
-    CookieClicker firstPurchased = firstPurchaseReady.barterBuildings(building, TO_BUY_FIRST);
+    CookieClicker firstPurchased = firstPurchaseReady.transactBuildings(building, TO_BUY_FIRST);
     assertEquals(firstPrice,
             firstPurchaseReady.getCurrentBank() - firstPurchased.getCurrentBank(), DELTA);
     assertEquals(TO_BUY_FIRST,
             firstPurchased.getBuildingInventory().getOrDefault(building, 0), DELTA);
 
     // Then we make another purchase.
-    double secondPrice = impl.getBarteringBuildingAmount(building, TO_BUY_SECOND);
+    double secondPrice = impl.getTransactionalBuildingAmount(building, TO_BUY_SECOND);
     CookieClicker secondPurchaseReady = firstPurchased.adjustBank(secondPrice);
-    CookieClicker secondPurchased = secondPurchaseReady.barterBuildings(building, TO_BUY_SECOND);
+    CookieClicker secondPurchased = secondPurchaseReady.transactBuildings(building, TO_BUY_SECOND);
     assertEquals(secondPrice,
             secondPurchaseReady.getCurrentBank() - secondPurchased.getCurrentBank(), DELTA);
     assertEquals(TO_BUY_FIRST + TO_BUY_SECOND,
             secondPurchased.getBuildingInventory().getOrDefault(building, 0));
 
     // We should be able to refund either the first or second purchase, or both of them together.
-    double firstRefund = secondPurchased.getBarteringBuildingAmount(building, -TO_BUY_FIRST);
-    double secondRefund = secondPurchased.getBarteringBuildingAmount(building, -TO_BUY_SECOND);
-    double combinedRefund = secondPurchased.getBarteringBuildingAmount(building, -TO_BUY_FIRST - TO_BUY_SECOND);
+    double firstRefund = secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST);
+    double secondRefund = secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_SECOND);
+    double combinedRefund = secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST - TO_BUY_SECOND);
 
     // Let's refund just the first purchase.
-    CookieClicker firstRefunded = secondPurchased.barterBuildings(building, -TO_BUY_FIRST);
+    CookieClicker firstRefunded = secondPurchased.transactBuildings(building, -TO_BUY_FIRST);
     assertEquals(firstRefund,
             firstRefunded.getCurrentBank() - secondPurchased.getCurrentBank(), DELTA);
     assertEquals(TO_BUY_SECOND,
             firstRefunded.getBuildingInventory().getOrDefault(building, 0), DELTA);
 
     // What if we had just refunded the second purchase?
-    CookieClicker secondRefunded = secondPurchased.barterBuildings(building, -TO_BUY_SECOND);
+    CookieClicker secondRefunded = secondPurchased.transactBuildings(building, -TO_BUY_SECOND);
     assertEquals(secondRefund,
             secondRefunded.getCurrentBank() - secondPurchased.getCurrentBank(), DELTA);
     assertEquals(TO_BUY_FIRST,
             secondRefunded.getBuildingInventory().getOrDefault(building, 0), DELTA);
 
     // What if we had refunded both purchases at the same time?
-    CookieClicker combinationRefunded = secondPurchased.barterBuildings(building, -TO_BUY_FIRST - TO_BUY_SECOND);
+    CookieClicker combinationRefunded = secondPurchased.transactBuildings(building, -TO_BUY_FIRST - TO_BUY_SECOND);
     assertEquals(combinedRefund,
             secondPurchased.getCurrentBank() - combinationRefunded.getCurrentBank(), DELTA);
     assertEquals(0,
@@ -256,7 +256,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
   /**
    * Verify buyUpgrade behavior in the correct scenarios.
    * <p>
-   * This relies on correct getter, adjustBank, and barterBuildings behavior.
+   * This relies on correct getter, adjustBank, and transactBuildings behavior.
    */
   @Test
   default void testBuyUpgrade() {
@@ -267,7 +267,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     CookieClicker impl = getImplementation();
     double upgradeNPPrice = impl.getUpgradePrice(UPGRADE_NO_PREREQS);
     double upgradePPrice = impl.getUpgradePrice(UPGRADE_PREREQS);
-    double prereqPrice = impl.getBarteringBuildingAmount(PREREQUISITES, 1);
+    double prereqPrice = impl.getTransactionalBuildingAmount(PREREQUISITES, 1);
     // We assume buying these items consecutively doesn't change price.
 
     CookieClicker purchaseReady = impl.adjustBank(upgradeNPPrice + upgradePPrice + prereqPrice);
@@ -277,7 +277,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
             purchaseReady.getCurrentBank() - purchasedNoPrereqs.getCurrentBank(), DELTA);
 
     // If we fill out prerequisites we should be able to purchase the second upgrade as well.
-    CookieClicker purchasedPrereqs = purchasedNoPrereqs.barterBuildings(PREREQUISITES, 1)
+    CookieClicker purchasedPrereqs = purchasedNoPrereqs.transactBuildings(PREREQUISITES, 1)
             .buyUpgrade(UPGRADE_PREREQS);
     assertTrue(purchasedPrereqs.getProductionUpgrades().contains(UPGRADE_PREREQS));
     assertEquals(upgradePPrice + prereqPrice,
@@ -374,7 +374,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
   /**
    * Test that getRate correctly behaves.
    * <p>
-   * This test relies on correct barterBuildings behavior.
+   * This test relies on correct transactBuildings behavior.
    */
   @Test
   default void testGetRate() {
@@ -384,8 +384,8 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     // I assume we don't already own a mock purchase.
     assertEquals(0, impl.getRate(PURCHASE));
 
-    double purchasePrice = impl.getBarteringBuildingAmount(PURCHASE, 1);
-    CookieClicker purchased = impl.adjustBank(purchasePrice).barterBuildings(PURCHASE, 1);
+    double purchasePrice = impl.getTransactionalBuildingAmount(PURCHASE, 1);
+    CookieClicker purchased = impl.adjustBank(purchasePrice).transactBuildings(PURCHASE, 1);
     // I assume whatever happens with building rates that there is at least some amount of income.
     assertTrue(purchased.getRate(PURCHASE) > 0);
   }
@@ -393,30 +393,30 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
   // GETBARTERINGBUILDINGAMOUNT
 
   /**
-   * Test that getBarteringBuild correctly invalidates illegal arguments.
+   * Test that getTransactionalBuild correctly invalidates illegal arguments.
    * <p>
-   * This relies on correct barterBuildings behavior.
+   * This relies on correct transactBuildings behavior.
    */
   @Test
-  default void testGetBarteringBuildingAmountIllegalArguments() {
+  default void testGetTransactionalBuildingAmountIllegalArguments() {
     BuildingType PURCHASE = MockBuildingType.RATE1PRICE1;
 
     CookieClicker impl = getImplementation();
     assertThrows(NullPointerException.class,
-            () -> impl.getBarteringBuildingAmount(null, 0));
+            () -> impl.getTransactionalBuildingAmount(null, 0));
     // I assume that there are currently no mock purchases already owned,
     // then we can't query the refund price.
     assertThrows(IllegalArgumentException.class,
-            () -> impl.getBarteringBuildingAmount(PURCHASE, -1));
+            () -> impl.getTransactionalBuildingAmount(PURCHASE, -1));
 
     // We can give ourselves one purchase, but it'd still be wrong to query for the refund of two.
-    double purchasePrice = impl.getBarteringBuildingAmount(PURCHASE, 1);
-    CookieClicker onePurchased = impl.adjustBank(purchasePrice).barterBuildings(PURCHASE, 1);
+    double purchasePrice = impl.getTransactionalBuildingAmount(PURCHASE, 1);
+    CookieClicker onePurchased = impl.adjustBank(purchasePrice).transactBuildings(PURCHASE, 1);
     assertThrows(IllegalArgumentException.class,
-            () -> onePurchased.getBarteringBuildingAmount(PURCHASE, -2));
+            () -> onePurchased.getTransactionalBuildingAmount(PURCHASE, -2));
   }
 
-  // I don't test getBarteringBuildingAmount because too much is up to the implementation.
+  // I don't test getTransactionalBuildingAmount because too much is up to the implementation.
 
   // GETUPGRADEPRICE
 
@@ -437,4 +437,6 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
   }
 
   // I don't test getUpgradePrice because too much is up to the implementation.
+
+  // I don't test getNextAnticipatedChange because too much is up to the implementation (vague).
 }

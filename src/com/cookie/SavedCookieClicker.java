@@ -20,6 +20,8 @@ import java.util.Set;
  * state is left intentionally vague for different extensions.
  */
 public interface SavedCookieClicker {
+  // Core game values.
+
   /**
    * Returns the total time spent in this save.
    *

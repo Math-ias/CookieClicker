@@ -3,7 +3,7 @@ package com.cookie;
 import java.util.Collection;
 
 /**
- * A one-time purchasable asset that affects production rates.
+ * An upgrade.
  */
 public interface ProductionUpgrade {
   /**

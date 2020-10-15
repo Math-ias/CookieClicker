@@ -4,25 +4,25 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * A temporary collection of effects on production.
+ * An expiring set of effects on cookie production.
  */
 public interface ProductionBuff {
   /**
-   * The amount of time left for this buff.
+   * The amount of time left before this buff expires.
    *
    * @return The total amount of time left on this buff measured in ticks (positive).
    */
   long getTimeLeft();
 
   /**
-   * The amount of time this buff started with.
+   * The amount of time this buff was constructed with.
    *
    * @return The total amount of time this buff will be active for measured in ticks (positive).
    */
   long getTimeTotal();
 
   /**
-   * Provides this buff warped forward by a certain amount of time.
+   * Provides a new version of this buff fast-forwarded.
    *
    * @param ticks The amount of time to warp this buff forward by in ticks.
    * @return The production buff if it exists after the amount of time, empty if it doesn't exist.
@@ -45,7 +45,7 @@ public interface ProductionBuff {
    * <ul>
    *   <li>Equal time left.</li>
    *   <li>Equal time total.</li>
-   *   <li>Equal collections of ProductionEffect's. See {@link ProductionEffect}'s note about equals behavior.</li>
+   *   <li>Equal collections of effects. See {@link ProductionEffect}'s equals.</li>
    * </ul>
    *
    * @param o The object to compare to.
@@ -54,7 +54,7 @@ public interface ProductionBuff {
   boolean equals(Object o);
 
   /**
-   * Returns the hashCode of this ProductionBuff.
+   * Returns the hash code of this ProductionBuff.
    * <p>
    * The hashCode should be calculated as the Objects.hash of the time left, time total, and effects
    * collection.

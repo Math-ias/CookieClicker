@@ -1,14 +1,17 @@
 package com.cookie;
 
 /**
- * Represents a running game of Cookie Clicker queryable for measures, and writeable.
+ * A simulated game of Cookie Clicker queryable, and transformable with user actions.
+ * <p>
+ * The queries available with this interface are measures and are expected to change discretely with
+ * core game values.
  */
 public interface CookieClicker extends SavedCookieClicker {
 
   // Getting new instances.
 
   /**
-   * Provides this game state fast-forwarded by the given time.
+   * Provides a new version of this game state fast-forwarded.
    * <p>
    * This method not only changes in-game time, but also progresses game properties and statistics
    * as if the amount of time had really been played out.
@@ -31,10 +34,10 @@ public interface CookieClicker extends SavedCookieClicker {
   CookieClicker warp(long ticks);
 
   /**
-   * Returns the game state after the building sale.
+   * Provides a new version of this post-building-sale (buying or selling).
    * <p>
-   * The unit price of a building is not necessarily used. Use getBarteringBuildingsAmount to find
-   * out what amount will paid or refunded in this sale.
+   * The unit price of a building is not necessarily used. Use getTransactionalBuildingsAmount to
+   * find out what amount will paid or refunded in this sale.
    *
    * @param buildingType The building type to purchase or sell.
    * @param amount       The non-zero number of buildings involved in the sale. Positive numbers to
@@ -45,10 +48,10 @@ public interface CookieClicker extends SavedCookieClicker {
    *                                  unaffordable amount or attempting to sell more buildings than
    *                                  are owned.
    */
-  CookieClicker barterBuildings(BuildingType buildingType, int amount);
+  CookieClicker transactBuildings(BuildingType buildingType, int amount);
 
   /**
-   * Returns the game state after the upgrade is purchased.
+   * Provides a new version of this game state post-upgrade-purchase.
    * <p>
    * The unit price of an upgrade is not necessarily used. Use getUpgradePrice to find out what
    * amount will be paid for this purchase.
@@ -62,7 +65,7 @@ public interface CookieClicker extends SavedCookieClicker {
   CookieClicker buyUpgrade(ProductionUpgrade upgrade);
 
   /**
-   * Returns the game state after the buff is put into effect.
+   * Provides a new version of this game state with a new buff.
    *
    * @param buff The buff to add to the game.
    * @return The new game state with this new buff.
@@ -71,7 +74,7 @@ public interface CookieClicker extends SavedCookieClicker {
   CookieClicker registerBuff(ProductionBuff buff);
 
   /**
-   * Returns a game state with a cookie-adjusted bank accounts.
+   * Provides a new version of this game state with a cookie-adjusted bank account.
    * <p>
    * This method was provided for the dual-purpose of being able to simulate certain golden cookie
    * prizes, and being able to adjust state to set-up testing scenarios.
@@ -86,7 +89,7 @@ public interface CookieClicker extends SavedCookieClicker {
   CookieClicker adjustBank(double cookies);
 
   /**
-   * Returns a game state with a rate of clicking the big cookie.
+   * Provides a new version of this game state with a new clicking rate.
    *
    * @param rate The new non-negative clicking rate in clicks per tick.
    * @return The new game state.
@@ -97,7 +100,7 @@ public interface CookieClicker extends SavedCookieClicker {
   // Measures.
 
   /**
-   * Returns the current rate of all the buildings owned of the target type in-game.
+   * Returns the cookie production rate of all buildings of a certain building type.
    *
    * @param target A non-null building type to lookup the rate for.
    * @return The rate in cookies per tick that this building type in total is currently generating.
@@ -107,7 +110,7 @@ public interface CookieClicker extends SavedCookieClicker {
   double getRate(BuildingType target);
 
   /**
-   * Returns the calculated cookie amount involved in a potential building sale.
+   * Returns the price, or refund of this building sale.
    * <p>
    * This will always returns zero for a zero-amount purchase.
    *
@@ -119,10 +122,10 @@ public interface CookieClicker extends SavedCookieClicker {
    * @throws IllegalArgumentException If there is an attempt to query the refund price for more
    *                                  buildings than are currently owned.
    */
-  double getBarteringBuildingAmount(BuildingType target, int amount);
+  double getTransactionalBuildingAmount(BuildingType target, int amount);
 
   /**
-   * Returns the current cookie price involved in a potential upgrade purchase.
+   * Returns the price of this upgrade purchase.
    *
    * @param upgrade A non-null upgrade to lookup the buying price for.
    * @return The current price of this upgrade.
@@ -132,9 +135,9 @@ public interface CookieClicker extends SavedCookieClicker {
   double getUpgradePrice(ProductionUpgrade upgrade);
 
   /**
-   * Returns a calculation of how many cookies are earned per each click.
+   * Returns how many cookies are produced by clicking the big cookie once.
    *
-   * @return The number of cookies earned by clicking the big cookie once.
+   * @return The number of cookies produced by one big cookie click.
    */
   double getCookiesPerClick();
 

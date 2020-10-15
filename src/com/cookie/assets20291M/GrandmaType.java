@@ -1,4 +1,4 @@
-package com.cookie.early20221M;
+package com.cookie.assets20291M;
 
 import com.cookie.CookieClicker;
 import com.cookie.BuildingProductionEffect;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Early-game grandma type upgrades.
+ * The necessary "grandma-type" upgrades for early-game play.
  */
 public enum GrandmaType implements ProductionUpgrade {
   FARMER_GRANDMAS(55000, FarmerGrandmaFarmEffect.INSTANCE);
@@ -64,7 +64,7 @@ public enum GrandmaType implements ProductionUpgrade {
     INSTANCE;
 
     @Override
-    public double getEffect(SavedCookieClicker stats) {
+    public double getNumber(SavedCookieClicker stats) {
       Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
       return 1 + 0.01 * inventory.getOrDefault(Building.GRANDMA, 0);
     }

@@ -1,7 +1,5 @@
 package com.cookie;
 
-import com.cookie.BuildingProductionEffect;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,6 +13,6 @@ public abstract class BuildingProductionEffectTest {
   @Test
   public void testGetEffectIllegalArguments() {
     BuildingProductionEffect impl = getImplementation();
-    assertThrows(NullPointerException.class, () -> impl.getEffect(null));
+    assertThrows(NullPointerException.class, () -> impl.getNumber(null));
   }
 }

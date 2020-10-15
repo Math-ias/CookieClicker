@@ -1,25 +1,26 @@
-package com.cookie.early20221M;
+package com.cookie.assets20291M;
 
 import com.cookie.BuildingProductionEffect;
 import com.cookie.BuildingType;
 import com.cookie.SavedCookieClicker;
 
 /**
- * A class to provide a X2 BuildingProductionEffect.
+ * An effect to double building production.
  */
-public class BuildingProductionDoubler implements BuildingProductionEffect {
+class BuildingProductionDoubler implements BuildingProductionEffect {
   private final BuildingType target;
 
   /**
-   * Create a new building production doubler.
-   * @param target  The building target of this effect.
+   * Create a new targeted building production doubler.
+   *
+   * @param target The building target of this X2 effect.
    */
   public BuildingProductionDoubler(BuildingType target) {
     this.target = target;
   }
 
   @Override
-  public double getEffect(SavedCookieClicker stats) {
+  public double getNumber(SavedCookieClicker stats) {
     return 2;
   }
 

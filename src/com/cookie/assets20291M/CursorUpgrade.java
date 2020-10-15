@@ -1,4 +1,4 @@
-package com.cookie.early20221M;
+package com.cookie.assets20291M;
 
 import com.cookie.BuildingType;
 import com.cookie.CookieClicker;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Cursor upgrades usable early-game.
+ * The necessary upgrades to X2 cursor (and mouse) production for early-game play.
  */
 public enum CursorUpgrade implements ProductionUpgrade {
   REINFORCED_INDEX_FINGER(1, 100),
@@ -58,7 +58,7 @@ public enum CursorUpgrade implements ProductionUpgrade {
     INSTANCE;
 
     @Override
-    public double getEffect(CookieClicker stats) {
+    public double getNumber(CookieClicker stats) {
       return 2;
     }
 

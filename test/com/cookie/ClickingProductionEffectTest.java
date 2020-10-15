@@ -1,7 +1,5 @@
 package com.cookie;
 
-import com.cookie.ClickingProductionEffect;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,6 +13,6 @@ public abstract class ClickingProductionEffectTest {
   @Test
   public void testGetEffectIllegalArguments() {
     ClickingProductionEffect impl = getImplementation();
-    assertThrows(NullPointerException.class, () -> impl.getEffect(null));
+    assertThrows(NullPointerException.class, () -> impl.getNumber(null));
   }
 }

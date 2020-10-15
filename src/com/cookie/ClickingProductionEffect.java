@@ -1,7 +1,7 @@
 package com.cookie;
 
 /**
- * A production effect applying to clicking production.
+ * An effect on the cookie production of clicking the big cookie.
  */
 public interface ClickingProductionEffect extends ProductionEffect {
   @Override
@@ -10,11 +10,14 @@ public interface ClickingProductionEffect extends ProductionEffect {
   }
 
   /**
-   * Calculate the effect number to be used in calculation based on game state statistics.
+   * Calculate the factor or constant to be used in calculation based on game state.
+   * <p>
+   * Clicking effects are intentionally calculated from a higher order interface than {@link
+   * BuildingProductionEffect#getNumber} to allow access to new calculations like building rates.
    *
    * @param state The game state to calculate the effect from.
-   * @return  The number to be used in calculation.
+   * @return The number to be used in calculation.
    * @throws NullPointerException If stats is null.
    */
-  double getEffect(CookieClicker state);
+  double getNumber(CookieClicker state);
 }
