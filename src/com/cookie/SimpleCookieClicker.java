@@ -15,12 +15,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A SimpleCookieClicker is a simple approach to cookie clicker state management.
+ * A SimpleCookieClicker is a simple functional approach to fulfilling the simulator API.
  * <p>
- * Upgrades are priced at unit price. But the price of buildings is scaled by a factor of 1.15 each
- * time. See <a href="https://cookieclicker.fandom.com/wiki/Building">the wiki for more
- * details.</a>
+ * Upgrades are priced at unit price. But the price of buildings is scaled by a factor of 1.15 per
+ * each purchase. See <a href="https://cookieclicker.fandom.com/wiki/Building">the wiki for more
+ * details.</a> Refunds use geometric series to approximate the amount originally paid for that
+ * number of buildings multiplied by the refund factor (less than one, greater than zero).
  * <p>
+ * Methods returning a changed replica of this instance will have the same refund and price growth
+ * constants.
  */
 public class SimpleCookieClicker implements CookieClicker {
 
@@ -39,21 +42,28 @@ public class SimpleCookieClicker implements CookieClicker {
   final Map<BuildingType, Double> buildingRates;
   final double cookiesPerClick;
 
+  // Specific to the implementation, price growth and refund factors.
+  final double priceGrowthFactor;
+  final double refundFactor;
+
   /**
    * Create a new instance of a SimpleCookieClicker with the following properties.
    *
-   * @param ticks           The non-negative number of ticks elapsed in this game.
-   * @param inventory       The current non-null building inventory of this game.
-   * @param upgrades        The current non-null upgrade inventory of this game.
-   * @param buffs           The current non-null collection of buffs.
-   * @param clickingRate    The non-negative clicking rate set for this game.
-   * @param currentBank     The non-negative current amount of cookies owned.
-   * @param cookiesBaked    The non-negative total amount of cookies made all-time.
-   * @param handmadeCookies The non-negative total amount of cookies made by clicking the big
-   *                        cookie.
-   * @param cookieClicks    The non-negative total number of times the big cookie has been clicked.
+   * @param ticks             The non-negative number of ticks elapsed in this game.
+   * @param inventory         The current non-null building inventory of this game.
+   * @param upgrades          The current non-null upgrade inventory of this game.
+   * @param buffs             The current non-null collection of buffs.
+   * @param clickingRate      The non-negative clicking rate set for this game.
+   * @param currentBank       The non-negative current amount of cookies owned.
+   * @param cookiesBaked      The non-negative total amount of cookies made all-time.
+   * @param handmadeCookies   The non-negative total amount of cookies made by clicking the big
+   *                          cookie.
+   * @param cookieClicks      The non-negative total number of times the big cookie has been
+   *                          clicked.
+   * @param priceGrowthFactor The positive factor to multiply prices by.
    * @throws IllegalArgumentException If ticks, clickingRate, currentBank, cookiesBaked,
-   *                                  handmadeCookies, or cookieClicks are negative.
+   *                                  handmadeCookies, or cookieClicks are negative. If
+   *                                  priceGrowthFactor, or refundFactor are non-positive.
    * @throws NullPointerException     If inventory, upgrades, or buffs are null.
    */
   public SimpleCookieClicker(long ticks,
@@ -62,16 +72,22 @@ public class SimpleCookieClicker implements CookieClicker {
                              List<ProductionBuff> buffs,
                              double clickingRate,
                              double currentBank,
-                             double cookiesBaked, double handmadeCookies, double cookieClicks) {
+                             double cookiesBaked, double handmadeCookies, double cookieClicks,
+                             double priceGrowthFactor, double refundFactor) {
     // We can start with input validation.
     if (ticks < 0 ||
             clickingRate < 0 ||
             currentBank < 0 ||
             cookiesBaked < 0 ||
             handmadeCookies < 0 ||
-            cookieClicks < 0) {
+            cookieClicks < 0
+    ) {
       throw new IllegalArgumentException("Cannot use negative ticks," +
               " currentBank, cookiesBaked, handmadecookies, or cookieClicks.");
+    }
+
+    if (priceGrowthFactor <= 0 || refundFactor <= 0) {
+      throw new IllegalArgumentException("Cannot use non-positive price growth or refund factors.");
     }
 
     // Now we mix field assignment with validation.
@@ -84,6 +100,8 @@ public class SimpleCookieClicker implements CookieClicker {
     this.cookiesBaked = cookiesBaked;
     this.handmadeCookies = handmadeCookies;
     this.cookieClicks = cookieClicks;
+    this.priceGrowthFactor = priceGrowthFactor;
+    this.refundFactor = refundFactor;
 
     // Now we have to calculate building rates, and cookies per click.
     // This gets complicated with effects.
@@ -121,20 +139,20 @@ public class SimpleCookieClicker implements CookieClicker {
     Map<BuildingType, Map<ProductionEffect.TERM, List<Double>>> buildingNumbers = buildingProductionEffects.stream()
             .collect(Collectors.groupingBy(BuildingProductionEffect::getTarget,
                     Collectors.groupingBy(BuildingProductionEffect::getTerm,
-                            Collectors.mapping(effect -> effect.getEffect(this),
+                            Collectors.mapping(effect -> effect.getNumber(this),
                                     Collectors.toList()))));
 
     // Now we combine the results for each building to create a new buildings rate.
     Map<BuildingType, Double> newBuildingRates = new LinkedHashMap<>();
     for (Map.Entry<BuildingType, Integer> buildingEntry : inventory.entrySet()) {
       Map<ProductionEffect.TERM, List<Double>> effectNumbers = buildingNumbers.getOrDefault(buildingEntry.getKey(),
-              Collections.EMPTY_MAP);
+              Collections.emptyMap());
 
-      List<Double> constants = effectNumbers.getOrDefault(ProductionEffect.TERM.CONSTANT, Collections.EMPTY_LIST);
-      List<Double> multipliers = effectNumbers.getOrDefault(ProductionEffect.TERM.MULTIPLIER, Collections.EMPTY_LIST);
+      List<Double> constants = effectNumbers.getOrDefault(ProductionEffect.TERM.CONSTANT, Collections.emptyList());
+      List<Double> multipliers = effectNumbers.getOrDefault(ProductionEffect.TERM.MULTIPLIER, Collections.emptyList());
 
       double constant = constants.stream()
-              .reduce(0.0, (a, b) -> a + b);
+              .reduce(0.0, Double::sum);
       double multiplier = multipliers.stream()
               .reduce(1.0, (a, b) -> a * b);
 
@@ -149,29 +167,36 @@ public class SimpleCookieClicker implements CookieClicker {
     // It's safe to let the effect query building rates now since we set them above.
     Map<ProductionEffect.TERM, List<Double>> clickingNumbers = clickingProductionEffects.stream()
             .collect(Collectors.groupingBy(ClickingProductionEffect::getTerm,
-                    Collectors.mapping(effect -> effect.getEffect(this), Collectors.toList())));
+                    Collectors.mapping(effect -> effect.getNumber(this), Collectors.toList())));
 
-    List<Double> clickingConstants = clickingNumbers.getOrDefault(ProductionEffect.TERM.CONSTANT, Collections.EMPTY_LIST);
-    List<Double> clickingMultipliers = clickingNumbers.getOrDefault(ProductionEffect.TERM.MULTIPLIER, Collections.EMPTY_LIST);
+    List<Double> clickingConstants = clickingNumbers.getOrDefault(ProductionEffect.TERM.CONSTANT, Collections.emptyList());
+    List<Double> clickingMultipliers = clickingNumbers.getOrDefault(ProductionEffect.TERM.MULTIPLIER, Collections.emptyList());
 
     this.cookiesPerClick = 1 *
             clickingMultipliers.stream().reduce(1.0, (a, b) -> a * b) +
-            clickingConstants.stream().reduce(0.0, (a, b) -> a + b);
+            clickingConstants.stream().reduce(0.0, Double::sum);
   }
+
+  private static final double DEFAULT_PRICE_GROWTH_FACTOR = 1.15;
+  private static final double DEFAULT_REFUND_FACTOR = 0.25;
 
   /**
    * Create a fresh game instance of a SimpleCookieClicker.
+   * <p>
+   * This uses defaults for price growth and refund factors.
    */
   public SimpleCookieClicker() {
     this(0,
-            Collections.EMPTY_MAP,
-            Collections.EMPTY_SET,
-            Collections.EMPTY_LIST,
+            Collections.emptyMap(),
+            Collections.emptySet(),
+            Collections.emptyList(),
             0,
             0,
             0,
             0,
-            0);
+            0,
+            DEFAULT_PRICE_GROWTH_FACTOR,
+            DEFAULT_REFUND_FACTOR);
   }
 
   @Override
@@ -186,11 +211,12 @@ public class SimpleCookieClicker implements CookieClicker {
     // It's not enough to extrapolate from current rates.
     // Instead, we need to seek to where those calculated measures change.
     // And then warp again.
-    OptionalLong nextBuffExpiration = getActiveProductionBuffs().stream()
+    OptionalLong ticksToBuffExpiration = getActiveProductionBuffs().stream()
             .mapToLong(ProductionBuff::getTimeLeft)
             .min();
-    long ticksToWarp = nextBuffExpiration.isPresent() ?
-            Math.min(ticks, nextBuffExpiration.getAsLong()) : ticks;
+
+    long ticksToWarp = ticksToBuffExpiration.isPresent() ?
+            Math.min(ticksToBuffExpiration.getAsLong(), ticks) : ticks;
 
     double newCookieClicks = clickingRate * ticksToWarp;
     double newHandmadeCookies = newCookieClicks * getCookiesPerClick();
@@ -212,19 +238,21 @@ public class SimpleCookieClicker implements CookieClicker {
             this.currentBank + newlyBakedCookies,
             this.cookiesBaked + newlyBakedCookies,
             this.handmadeCookies + newHandmadeCookies,
-            this.cookieClicks + newCookieClicks)
+            this.cookieClicks + newCookieClicks,
+            this.priceGrowthFactor,
+            this.refundFactor)
             .warp(ticks - ticksToWarp);
   }
 
   @Override
-  public CookieClicker barterBuildings(BuildingType buildingType, int amount) {
+  public CookieClicker transactBuildings(BuildingType buildingType, int amount) {
     Objects.requireNonNull(buildingType);
     int typeOwned = inventory.getOrDefault(buildingType, 0);
     if (typeOwned + amount < 0) { // Prevent amount exception on price check.
       throw new IllegalArgumentException("The number of buildings does not permit this sale.");
     }
 
-    double bankCharge = getBarteringBuildingAmount(buildingType, amount);
+    double bankCharge = getTransactionalBuildingAmount(buildingType, amount);
     if (currentBank - bankCharge < 0) {
       throw new IllegalArgumentException("This sale is unaffordable.");
     } else {
@@ -236,7 +264,9 @@ public class SimpleCookieClicker implements CookieClicker {
               this.buffs,
               this.clickingRate,
               this.currentBank - bankCharge,
-              this.cookiesBaked, this.handmadeCookies, this.cookieClicks);
+              this.cookiesBaked, this.handmadeCookies, this.cookieClicks,
+              this.priceGrowthFactor,
+              this.refundFactor);
     }
   }
 
@@ -260,7 +290,9 @@ public class SimpleCookieClicker implements CookieClicker {
               this.buffs,
               this.clickingRate,
               this.currentBank - upgradePrice,
-              this.cookiesBaked, this.handmadeCookies, this.cookieClicks);
+              this.cookiesBaked, this.handmadeCookies, this.cookieClicks,
+              this.priceGrowthFactor,
+              this.refundFactor);
     }
   }
 
@@ -276,7 +308,9 @@ public class SimpleCookieClicker implements CookieClicker {
             List.copyOf(buffsCopy),
             this.clickingRate,
             this.currentBank,
-            this.cookiesBaked, this.handmadeCookies, this.cookieClicks);
+            this.cookiesBaked, this.handmadeCookies, this.cookieClicks,
+            this.priceGrowthFactor,
+            this.refundFactor);
   }
 
   @Override
@@ -290,7 +324,9 @@ public class SimpleCookieClicker implements CookieClicker {
             this.buffs,
             rate,
             this.currentBank,
-            this.cookiesBaked, this.handmadeCookies, this.cookieClicks);
+            this.cookiesBaked, this.handmadeCookies, this.cookieClicks,
+            this.priceGrowthFactor,
+            this.refundFactor);
   }
 
   @Override
@@ -306,7 +342,9 @@ public class SimpleCookieClicker implements CookieClicker {
               this.currentBank + cookies,
               this.cookiesBaked + Math.max(cookies, 0),
               this.handmadeCookies,
-              this.cookieClicks);
+              this.cookieClicks,
+              this.priceGrowthFactor,
+              this.refundFactor);
     }
   }
 
@@ -368,11 +406,8 @@ public class SimpleCookieClicker implements CookieClicker {
     return buildingRates.getOrDefault(target, 0.0);
   }
 
-  private static double PRICE_GROWTH_FACTOR = 1.15;
-  private static double REFUND_REDUCTION = 0.25;
-
   @Override
-  public double getBarteringBuildingAmount(BuildingType target, int amount) {
+  public double getTransactionalBuildingAmount(BuildingType target, int amount) {
     Objects.requireNonNull(target);
 
     int targetOwned = inventory.getOrDefault(target, amount);
@@ -383,17 +418,17 @@ public class SimpleCookieClicker implements CookieClicker {
     if (amount > 0) {
       // Price scaling formulas from https://cookieclicker.fandom.com/wiki/Building.
       return Math.ceil(target.unitPrice()
-              * Math.pow(PRICE_GROWTH_FACTOR, targetOwned)
-              * (Math.pow(PRICE_GROWTH_FACTOR, amount) - 1)
-              / (PRICE_GROWTH_FACTOR - 1));
+              * Math.pow(priceGrowthFactor, targetOwned)
+              * (Math.pow(priceGrowthFactor, amount) - 1)
+              / (priceGrowthFactor - 1));
     } else if (amount == 0) {
       return 0;
     } else {
       // The amount refunded is a quarter of the current price.
-      return -Math.ceil(target.unitPrice() * REFUND_REDUCTION
-              * Math.pow(PRICE_GROWTH_FACTOR, targetOwned + amount)
-              * (Math.pow(PRICE_GROWTH_FACTOR, -amount) - 1)
-              / (PRICE_GROWTH_FACTOR - 1));
+      return -Math.ceil(target.unitPrice() * refundFactor
+              * Math.pow(priceGrowthFactor, targetOwned + amount)
+              * (Math.pow(priceGrowthFactor, -amount) - 1)
+              / (priceGrowthFactor - 1));
     }
   }
 
@@ -406,5 +441,60 @@ public class SimpleCookieClicker implements CookieClicker {
     }
 
     return Objects.requireNonNull(upgrade).price();
+  }
+
+  // priceGrowthFactor, and refundFactor are provided in toString.
+  // They are provided to discourage toString processing for that information.
+
+  /**
+   * Provide the price growth factor this instance was created with.
+   *
+   * @return The current price growth factor used by this instance.
+   */
+  double getPriceGrowthFactor() {
+    return this.priceGrowthFactor;
+  }
+
+  /**
+   * Provide the refund factor this instance was created with.
+   *
+   * @return The current refund factor used by this instance.
+   */
+  double getRefundFactor() {
+    return this.refundFactor;
+  }
+
+  // toString is overridden to be helpful for those debugging.
+
+  /**
+   * Returns the string representation of this object and it's fields.
+   * <p>
+   * The object is stringified by providing all field names, followed by " = ", and then followed
+   * the field's value toString. These entries are comma separated ", ", and are enclosed by curly
+   * braces. "{" and "}".
+   * <p>
+   * This method is provided for debugging only. The fields and values provided are subject to
+   * change. All the information provided can be found directly or indirectly in this class's other
+   * methods.
+   *
+   * @return This instance stringified in the documented format.
+   */
+  @Override
+  public String toString() {
+
+    return "{" +
+            "ticks = " + this.ticks + ", " +
+            "inventory = " + this.inventory.toString() + ", " +
+            "upgrades = " + this.upgrades.toString() + ", " +
+            "buffs = " + this.buffs.toString() + ", " +
+            "clickingRate = " + this.clickingRate + ", " +
+            "cookiesBaked = " + this.cookiesBaked + ", " +
+            "handmadeCookies = " + this.handmadeCookies + ", " +
+            "cookieClicks = " + this.cookieClicks + ", " +
+            "buildingRates = " + this.buildingRates.toString() + ", " +
+            "cookiesPerClick = " + this.cookiesPerClick + ", " +
+            "priceGrowthFactor = " + this.priceGrowthFactor + ", " +
+            "refundFactor = " + this.refundFactor +
+            "}";
   }
 }
