@@ -1,0 +1,12 @@
+Version one is currently envisioned as an unambitious, stable library.
+The hope is to minimally capture the basic rules of the game,
+and to do so well and reasonably as to attract users.
+The interfaces should remain flexible enough that if someone is ambitious enough,
+they can capture all the features of CookieClicker.
+
+Version two is envisioned as a more ambitious simulation-engine for CookieClicker.
+Ideally, simulation logic would no longer be hard coded but instead come through abstractly.
+For example, each piece of CookieClicker (buildings, upgrades, achievements, buffs)
+would become an independent unit.
+These units would each have a method to query for the next major moment. (expiration, new achievement)
+Then the core instance would only be in charge of jumping to the nearest major moment again and again.
