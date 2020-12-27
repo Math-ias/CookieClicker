@@ -61,6 +61,8 @@ public class SimpleCookieClicker implements CookieClicker {
    * @param cookieClicks      The non-negative total number of times the big cookie has been
    *                          clicked.
    * @param priceGrowthFactor The positive factor to multiply prices by.
+   * @param refundFactor      The positive factor to multiply the price of sold buildings by to
+   *                          determine the total refund.
    * @throws IllegalArgumentException If ticks, clickingRate, currentBank, cookiesBaked,
    *                                  handmadeCookies, or cookieClicks are negative. If
    *                                  priceGrowthFactor, or refundFactor are non-positive.
