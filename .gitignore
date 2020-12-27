@@ -1,0 +1,7 @@
+# Build Ignores
+build/*
+
+# Editor Ignores
+# IntelliJ for the Author
+*.iml
+.idea/
