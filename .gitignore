@@ -1,7 +1,8 @@
 # Build Ignores
-build/*
+target/
 
 # Editor Ignores
 # IntelliJ for the Author
 *.iml
 .idea/
+.DS_Store
