@@ -41,10 +41,12 @@ public enum GrandmaType implements ProductionUpgrade {
   public boolean purchasable(CookieClicker stats) {
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     Integer grandmas = inventory.getOrDefault(Building.GRANDMA, 0);
-    return switch (this) {
-      case FARMER_GRANDMAS -> grandmas >= 1 && inventory.getOrDefault(Building.FARM, 0) >= 15;
-      default -> throw new AssertionError(UNEXPECTED_BRANCH);
-    };
+    switch (this) {
+      case FARMER_GRANDMAS:
+        return grandmas >= 1 && inventory.getOrDefault(Building.FARM, 0) >= 15;
+      default:
+        throw new AssertionError(UNEXPECTED_BRANCH);
+    }
   }
 
   @Override

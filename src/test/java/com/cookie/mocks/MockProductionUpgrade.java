@@ -24,12 +24,15 @@ public enum MockProductionUpgrade implements ProductionUpgrade {
 
   @Override
   public boolean purchasable(CookieClicker stats) {
-    return switch (this) {
-      case DUD -> true;
-      case MUST_OWN_1RATE1PRICE1 -> stats.getBuildingInventory()
-              .getOrDefault(MockBuildingType.RATE1PRICE1, 0) > 0;
-      default -> throw new AssertionError("Unexpected branch!");
-    };
+    switch (this) {
+      case DUD:
+        return true;
+      case MUST_OWN_1RATE1PRICE1:
+        return stats.getBuildingInventory()
+                .getOrDefault(MockBuildingType.RATE1PRICE1, 0) > 0;
+      default:
+        throw new AssertionError("Unexpected branch!");
+    }
   }
 
   @Override

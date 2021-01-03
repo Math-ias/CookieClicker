@@ -26,6 +26,7 @@ public enum ClickingUpgrade implements ProductionUpgrade {
 
   /**
    * Create a new ClickingUpgrade singleton with the following constants.
+   *
    * @param effects The collection of effects to return.
    * @param price   The price of this upgrade.
    */
@@ -40,11 +41,14 @@ public enum ClickingUpgrade implements ProductionUpgrade {
   public boolean purchasable(CookieClicker stats) {
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     long cursors = inventory.getOrDefault(Building.CURSOR, 0);
-    return switch (this) {
-      case PLASTIC_MOUSE -> cursors >= 25;
-      case THOUSAND_FINGERS -> stats.getHandmadeCookies() >= 1000;
-      default -> throw new AssertionError(UNEXPECTED_BRANCH);
-    };
+    switch (this) {
+      case PLASTIC_MOUSE:
+        return cursors >= 25;
+      case THOUSAND_FINGERS:
+        return stats.getHandmadeCookies() >= 1000;
+      default:
+        throw new AssertionError(UNEXPECTED_BRANCH);
+    }
   }
 
   @Override
