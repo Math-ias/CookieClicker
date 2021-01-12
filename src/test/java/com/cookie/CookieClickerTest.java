@@ -185,9 +185,9 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
             secondPurchased.getBuildingInventory().getOrDefault(building, 0));
 
     // We should be able to refund either the first or second purchase, or both of them together.
-    double firstRefund = secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST);
-    double secondRefund = secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_SECOND);
-    double combinedRefund = secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST - TO_BUY_SECOND);
+    double firstRefund = -secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST);
+    double secondRefund = -secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_SECOND);
+    double combinedRefund = -secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST - TO_BUY_SECOND);
 
     // Let's refund just the first purchase.
     CookieClicker firstRefunded = secondPurchased.transactBuildings(building, -TO_BUY_FIRST);
@@ -206,7 +206,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     // What if we had refunded both purchases at the same time?
     CookieClicker combinationRefunded = secondPurchased.transactBuildings(building, -TO_BUY_FIRST - TO_BUY_SECOND);
     assertEquals(combinedRefund,
-            secondPurchased.getCurrentBank() - combinationRefunded.getCurrentBank(), DELTA);
+            combinationRefunded.getCurrentBank() - secondPurchased.getCurrentBank(), DELTA);
     assertEquals(0,
             combinationRefunded.getBuildingInventory().getOrDefault(building, 0));
   }
