@@ -14,10 +14,21 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The necessary clicking upgrades for early-game play.
+ * The necessary clicking upgrades for simulating early-game play.
  */
 public enum ClickingUpgrade implements ProductionUpgrade {
+  /**
+   * One of the first upgrades for clicking.
+   * <p>
+   * Interestingly, this does not improve cursor production like others.
+   */
   PLASTIC_MOUSE(Collections.singleton(ClickingCPSBoost.INSTANCE), 50000),
+  /**
+   * An upgrade to both clicking, and cursor production.
+   * <p>
+   * This effect gives 0.1 cookies for each non-cursor building (specifically checking equals to the
+   * Cursor implementation in {@link Building}) in inventory.
+   */
   THOUSAND_FINGERS(Set.of(CursorThousandFingersEffect.INSTANCE,
           ClickingThousandFingersEffect.INSTANCE), 100000);
 
@@ -28,7 +39,7 @@ public enum ClickingUpgrade implements ProductionUpgrade {
    * Create a new ClickingUpgrade singleton with the following constants.
    *
    * @param effects The collection of effects to return.
-   * @param price   The price of this upgrade.
+   * @param price   The price of this upgrade in cookies.
    */
   ClickingUpgrade(Collection<ProductionEffect> effects, double price) {
     this.effects = effects;
@@ -60,6 +71,8 @@ public enum ClickingUpgrade implements ProductionUpgrade {
   public double price() {
     return this.price;
   }
+
+  // In general, to make effect comparison developer-stress-free I've employed singletons.
 
   /**
    * A singleton instance of a clicking boost that provides one percent of CPS.

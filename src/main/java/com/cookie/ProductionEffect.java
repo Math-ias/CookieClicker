@@ -3,8 +3,8 @@ package com.cookie;
 /**
  * An arithmetic effect on in-game production rates.
  * <p>
- * It is recommended to create these statically so that comparisons of effectively the same effect
- * can be equal.
+ * It is recommended to create these statically to aid comparing effects when, for example,
+ * comparing Upgrades.
  */
 public interface ProductionEffect {
   /**
