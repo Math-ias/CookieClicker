@@ -23,12 +23,12 @@ public enum MockBuildingType implements BuildingType {
   }
 
   @Override
-  public double rate() {
+  public double getRate() {
     return this.rate;
   }
 
   @Override
-  public double unitPrice() {
+  public double getUnitPrice() {
     return this.unitPrice;
   }
 }

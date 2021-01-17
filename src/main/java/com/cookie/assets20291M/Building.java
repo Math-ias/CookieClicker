@@ -6,9 +6,26 @@ import com.cookie.BuildingType;
  * The necessary building types for simulating early game play.
  */
 public enum Building implements BuildingType {
-
-  CURSOR(15, 0.1 / 30), GRANDMA(100, 1 / 30), FARM(1100, 8 / 30),
-  MINE(12000, 47 / 30), FACTORY(130000, 260 / 30);
+  /**
+   * An auto-clicking cursor orbiting the Big Cookie.
+   */
+  CURSOR(15, 0.1 / 30),
+  /**
+   * An older woman, but also technically a building.
+   */
+  GRANDMA(100, 1 / 30),
+  /**
+   * A plot of land, also technically a building.
+   */
+  FARM(1100, 8 / 30),
+  /**
+   * A cookie mine.
+   */
+  MINE(12000, 47 / 30),
+  /**
+   * A building where cookies are manufactured.
+   */
+  FACTORY(130000, 260 / 30);
 
   private final double unitPrice;
   private final double unitRate;
@@ -16,8 +33,8 @@ public enum Building implements BuildingType {
   /**
    * Create a new building singleton with constants.
    *
-   * @param unitPrice The constant unit price to use.
-   * @param rate      The unit rate to use.
+   * @param unitPrice The constant unit price in cookies to use.
+   * @param rate      The unit rate to use in cookies per tick.
    */
   Building(double unitPrice, double rate) {
     this.unitPrice = unitPrice;
@@ -25,12 +42,12 @@ public enum Building implements BuildingType {
   }
 
   @Override
-  public double unitPrice() {
+  public double getUnitPrice() {
     return this.unitPrice;
   }
 
   @Override
-  public double rate() {
+  public double getRate() {
     return this.unitRate;
   }
 }

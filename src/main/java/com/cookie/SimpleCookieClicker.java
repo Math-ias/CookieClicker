@@ -160,7 +160,7 @@ public class SimpleCookieClicker implements CookieClicker {
 
       newBuildingRates.put(buildingEntry.getKey(),
               buildingEntry.getValue() *
-                      (multiplier * buildingEntry.getKey().rate() + constant));
+                      (multiplier * buildingEntry.getKey().getRate() + constant));
     }
     this.buildingRates = Map.copyOf(newBuildingRates);
 
@@ -419,7 +419,7 @@ public class SimpleCookieClicker implements CookieClicker {
 
     if (amount > 0) {
       // Price scaling formulas from https://cookieclicker.fandom.com/wiki/Building.
-      return Math.ceil(target.unitPrice()
+      return Math.ceil(target.getUnitPrice()
               * Math.pow(priceGrowthFactor, targetOwned)
               * (Math.pow(priceGrowthFactor, amount) - 1)
               / (priceGrowthFactor - 1));
@@ -427,7 +427,7 @@ public class SimpleCookieClicker implements CookieClicker {
       return 0;
     } else {
       // The amount refunded is a quarter of the current price.
-      return -Math.ceil(target.unitPrice() * refundFactor
+      return -Math.ceil(target.getUnitPrice() * refundFactor
               * Math.pow(priceGrowthFactor, targetOwned + amount)
               * (Math.pow(priceGrowthFactor, -amount) - 1)
               / (priceGrowthFactor - 1));

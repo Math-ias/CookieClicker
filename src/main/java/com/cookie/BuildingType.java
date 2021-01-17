@@ -12,13 +12,13 @@ public interface BuildingType {
    *
    * @return The rate of this type of building in cookies per tick.
    */
-  double rate();
+  double getRate();
 
   /**
    * Return the unit price of this type of building.
    *
    * @return The unit price of this type of building.
    */
-  double unitPrice();
+  double getUnitPrice();
 
 }
