@@ -2,7 +2,7 @@ package com.cookie;
 
 /**
  * An arithmetic effect on in-game production rates.
- *
+ * <p>
  * It is recommended to create these statically so that comparisons of effectively the same effect
  * can be equal.
  */
@@ -23,6 +23,9 @@ public interface ProductionEffect {
 
   /**
    * Returns the term this effect's constant should be used in.
+   * <p>
+   * See the comments under the {@link TERM} enumeration to better understand how term and number
+   * are used together.
    *
    * @return Which term this effect's constant should be usd in.
    */

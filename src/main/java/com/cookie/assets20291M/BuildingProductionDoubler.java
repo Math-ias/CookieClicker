@@ -5,9 +5,11 @@ import com.cookie.BuildingType;
 import com.cookie.SavedCookieClicker;
 
 /**
- * An effect to double building production.
+ * An effect used internally to double building production for a variety of upgrades.
+ * <p>
+ * Feel free to re-use it when matching upgrades not included in this package.
  */
-class BuildingProductionDoubler implements BuildingProductionEffect {
+public class BuildingProductionDoubler implements BuildingProductionEffect {
   private final BuildingType target;
 
   /**
