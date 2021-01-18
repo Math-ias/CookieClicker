@@ -15,7 +15,7 @@ public class BuildingProductionDoubler implements BuildingProductionEffect {
   /**
    * Create a new targeted building production doubler.
    *
-   * @param target The building target of this X2 effect.
+   * @param target The building target of this doubling effect.
    */
   public BuildingProductionDoubler(BuildingType target) {
     this.target = target;

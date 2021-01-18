@@ -45,7 +45,7 @@ public interface ProductionBuff {
    * <ul>
    *   <li>Equal time left.</li>
    *   <li>Equal time total.</li>
-   *   <li>Equal collections of effects. See {@link ProductionEffect}'s equals.</li>
+   *   <li>Equal collections of effects. See {@link ProductionEffect}'s documentation for an equals recommendation.</li>
    * </ul>
    *
    * @param o The object to compare to.

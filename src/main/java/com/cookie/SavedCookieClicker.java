@@ -13,8 +13,8 @@ import java.util.Set;
  * thirty ticks per second.
  * <p>
  * Cookies are typed as doubles on purpose. Primitive types like integers, and longs cannot store
- * large enough numbers. Additionally, cookie clicker uses floating point numbers for bank and
- * rate.
+ * large enough numbers. Additionally, cookie clicker uses floating point numbers for bank totals
+ * and total production rate.
  * <p>
  * The state captured by this interface should be treated as immutable. Equals and hashCode for this
  * state is left intentionally vague for different extensions.
@@ -84,7 +84,7 @@ public interface SavedCookieClicker {
   /**
    * Returns the number of cookies baked by clicking the big cookie.
    *
-   * @return The total number of cookies earned by the mouse clicking the big cookie all-time.
+   * @return The total number of cookies earned by clicking the big cookie all-time.
    */
   double getHandmadeCookies();
 
