@@ -10,9 +10,9 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * The necessary X2 upgrades for simulating early-game play.
+ * The necessary upgrades to double building production in early-game play.
  */
-public enum X2BuildingUpgrades implements ProductionUpgrade {
+public enum DoublingBuildingUpgrades implements ProductionUpgrade {
   FORWARDS_FROM_GRANDMA(Building.GRANDMA, 1, 1000),
   STEEL_PLATED_ROLLING_PINS(Building.GRANDMA, 5, 5000),
   LUBRICATED_DENTURES(Building.GRANDMA, 25, 50000),
@@ -36,7 +36,7 @@ public enum X2BuildingUpgrades implements ProductionUpgrade {
    * @param targetMinimum The number of the target required to buy this upgrade.
    * @param price       The price of this upgrade in cookies.
    */
-  X2BuildingUpgrades(BuildingType target, long targetMinimum, double price) {
+  DoublingBuildingUpgrades(BuildingType target, long targetMinimum, double price) {
     this.target = target;
     this.targetMinimum = targetMinimum;
     this.price = price;
