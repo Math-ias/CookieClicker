@@ -13,7 +13,7 @@ public interface ClickingProductionEffect extends ProductionEffect {
    * Calculate the factor or constant to be used in calculation based on game state.
    * <p>
    * Clicking effects are intentionally calculated from a higher order interface than {@link
-   * BuildingProductionEffect#getNumber} to allow access to new calculations like building rates.
+   * BuildingProductionEffect#getNumber} to allow access to measures like building rates.
    *
    * @param state The game state to calculate the effect from.
    * @return The number to be used in calculation.

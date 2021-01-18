@@ -13,15 +13,18 @@ public interface CookieClicker extends SavedCookieClicker {
   /**
    * Provides a new version of this game state fast-forwarded.
    * <p>
-   * This method not only changes in-game time, but also progresses game properties and statistics
+   * This method not only changes in-game time, but also progresses core game objects and statistics
    * as if the amount of time had really been played out.
    * <p>
    * Game objects encapsulated by this interface, like buffs, should also be progressed. The exact
-   * details however are up to interpretation.
+   * details however are up to interpretation. This ambiguity is baked in to support CookieClicker
+   * features like spells that extend buff duration.
    * <p>
    * Note that in-game earning is not calculated directly from the rates of buildings, and the rate
-   * of clicking. To find out what measures are used internally, use getRate or getCookiesPerClick.
-   * The change in bank should be at least the sum of building, and clicking incomes.
+   * of clicking since these can be altered by upgrades or other game objects. To find out what
+   * measures are used internally, use {@link #getRate} or {@link #getCookiesPerClick}. The change
+   * in bank should be at least the sum of building, and clicking incomes. This is left ambiguous in
+   * case of future support for other game features that also provide earnings.
    * <p>
    * Interpretations should not alter building inventory, upgrade inventory, or clicking rate on
    * warp.
@@ -36,8 +39,8 @@ public interface CookieClicker extends SavedCookieClicker {
   /**
    * Provides a new version of this post-building-sale (buying or selling).
    * <p>
-   * The unit price of a building is not necessarily used. Use getTransactionalBuildingsAmount to
-   * find out what amount will paid or refunded in this sale.
+   * The unit price of a building is not necessarily used. Use {@link
+   * #getTransactionalBuildingAmount} to find out what amount will paid or refunded in this sale.
    *
    * @param buildingType The building type to purchase or sell.
    * @param amount       The non-zero number of buildings involved in the sale. Positive numbers to

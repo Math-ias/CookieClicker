@@ -17,7 +17,7 @@ public interface BuildingType {
   /**
    * Return the unit price of this type of building.
    *
-   * @return The unit price of this type of building.
+   * @return The unit price of this type of building in cookies.
    */
   double getUnitPrice();
 
