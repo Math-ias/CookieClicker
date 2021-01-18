@@ -13,15 +13,39 @@ import java.util.Map;
  * The necessary upgrades to double building production in early-game play.
  */
 public enum DoublingBuildingUpgrades implements ProductionUpgrade {
+  /**
+   * The first upgrade in a series to double grandma production.
+   */
   FORWARDS_FROM_GRANDMA(Building.GRANDMA, 1, 1000),
+  /**
+   * One upgrade in a series to double grandma production.
+   */
   STEEL_PLATED_ROLLING_PINS(Building.GRANDMA, 5, 5000),
+  /**
+   * The last upgrade implemented in the series to double grandma production.
+   */
   LUBRICATED_DENTURES(Building.GRANDMA, 25, 50000),
 
+  /**
+   * The first upgrade in a series to double farm production.
+   */
   CHEAP_HOES(Building.FARM, 1, 11000),
-  FERTILIZER(Building.FARM,5, 55000),
-  COOKIE_TREES(Building.FARM,25, 550000),
+  /**
+   * One upgrade in a series to double farm production.
+   */
+  FERTILIZER(Building.FARM, 5, 55000),
+  /**
+   * The last upgrade implemented in the series to double farm production.
+   */
+  COOKIE_TREES(Building.FARM, 25, 550000),
 
+  /**
+   * The first upgrade implemented to double mine production.
+   */
   SUGAR_GAS(Building.MINE, 1, 120000),
+  /**
+   * The last upgrade implemented to double mine production.
+   */
   MEGADRILL(Building.MINE, 1, 600000);
 
   private final BuildingType target;
@@ -32,9 +56,9 @@ public enum DoublingBuildingUpgrades implements ProductionUpgrade {
   /**
    * Create a new BasicBuildingUpgrade.
    *
-   * @param target      The building type target of this upgrade.
-   * @param targetMinimum The number of the target required to buy this upgrade.
-   * @param price       The price of this upgrade in cookies.
+   * @param target        The BuildingType to target with this upgrade.
+   * @param targetMinimum The number of the target to be owned before being purchasable.
+   * @param price         The price of this upgrade in cookies.
    */
   DoublingBuildingUpgrades(BuildingType target, long targetMinimum, double price) {
     this.target = target;
