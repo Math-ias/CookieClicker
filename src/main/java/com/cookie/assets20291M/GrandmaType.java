@@ -15,6 +15,9 @@ import java.util.Set;
  * The necessary "grandma-type" upgrades for early-game play.
  */
 public enum GrandmaType implements ProductionUpgrade {
+  /**
+   * An upgrade to grandma's that also increases farm production by one percent per grandma owned.
+   */
   FARMER_GRANDMAS(55000, FarmerGrandmaFarmEffect.INSTANCE);
 
   private final double price;
@@ -23,7 +26,7 @@ public enum GrandmaType implements ProductionUpgrade {
   /**
    * Create a new GrandmaType upgrade.
    *
-   * @param price       The price of this upgrade.
+   * @param price       The price of this upgrade in cookies.
    * @param extraEffect The extra effect of this upgrade other than doubling grandma efficiency.
    */
   GrandmaType(double price, ProductionEffect extraEffect) {
@@ -31,7 +34,7 @@ public enum GrandmaType implements ProductionUpgrade {
     this.extraEffect = extraEffect;
   }
 
-  private final ProductionEffect X2GRANDMA = new BuildingProductionDoubler(Building.GRANDMA);
+  private final ProductionEffect DOUBLE_GRANDMA = new BuildingProductionDoubler(Building.GRANDMA);
 
   private static String UNEXPECTED_BRANCH = "Reached an unexpected branch.";
 
@@ -51,7 +54,7 @@ public enum GrandmaType implements ProductionUpgrade {
 
   @Override
   public Collection<ProductionEffect> getEffects() {
-    return Set.of(X2GRANDMA, this.extraEffect);
+    return Set.of(DOUBLE_GRANDMA, this.extraEffect);
   }
 
   @Override
