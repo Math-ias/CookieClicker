@@ -254,7 +254,7 @@ public class SimpleCookieClicker implements CookieClicker {
       throw new IllegalArgumentException("The number of buildings does not permit this sale.");
     }
 
-    double bankCharge = getTransactionalBuildingAmount(buildingType, amount);
+    double bankCharge = getBuildingTransactionBill(buildingType, amount);
     if (currentBank - bankCharge < 0) {
       throw new IllegalArgumentException("This sale is unaffordable.");
     } else {
@@ -409,7 +409,7 @@ public class SimpleCookieClicker implements CookieClicker {
   }
 
   @Override
-  public double getTransactionalBuildingAmount(BuildingType target, int amount) {
+  public double getBuildingTransactionBill(BuildingType target, int amount) {
     Objects.requireNonNull(target);
 
     int targetOwned = inventory.getOrDefault(target, amount);

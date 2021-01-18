@@ -75,7 +75,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     // First, we calculate the minimum amount of profit we expect.
     // We attempt to secure a non-zero income for both clicking and building sources.
     BuildingType building = MockBuildingType.RATE1PRICE1;
-    double buildingPrice = impl.getTransactionalBuildingAmount(building, BUILDINGS_TO_BUY);
+    double buildingPrice = impl.getBuildingTransactionBill(building, BUILDINGS_TO_BUY);
     CookieClicker nonzeroIncome = impl.adjustBank(buildingPrice)
             .transactBuildings(building, BUILDINGS_TO_BUY)
             .setClickingRate(CLICKING_RATE);
@@ -122,7 +122,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
 
     CookieClicker impl = getImplementation();
     BuildingType building = MockBuildingType.RATE1PRICE1;
-    double buildingPrice = impl.getTransactionalBuildingAmount(building, TO_BUY);
+    double buildingPrice = impl.getBuildingTransactionBill(building, TO_BUY);
     // We adjust our state so that we have not enough cookies.
     CookieClicker noFunds = impl.adjustBank(-impl.getCurrentBank());
 
@@ -165,7 +165,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     // First we make one purchase.
     CookieClicker impl = getImplementation();
     BuildingType building = MockBuildingType.RATE1PRICE1;
-    double firstPrice = impl.getTransactionalBuildingAmount(building, TO_BUY_FIRST);
+    double firstPrice = impl.getBuildingTransactionBill(building, TO_BUY_FIRST);
     // I do have an assumption here that price won't change after adjusting the bank account.
     // I also assume the mock building isn't in inventory.
     CookieClicker firstPurchaseReady = impl.adjustBank(firstPrice);
@@ -176,7 +176,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
             firstPurchased.getBuildingInventory().getOrDefault(building, 0), DELTA);
 
     // Then we make another purchase.
-    double secondPrice = impl.getTransactionalBuildingAmount(building, TO_BUY_SECOND);
+    double secondPrice = impl.getBuildingTransactionBill(building, TO_BUY_SECOND);
     CookieClicker secondPurchaseReady = firstPurchased.adjustBank(secondPrice);
     CookieClicker secondPurchased = secondPurchaseReady.transactBuildings(building, TO_BUY_SECOND);
     assertEquals(secondPrice,
@@ -185,9 +185,9 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
             secondPurchased.getBuildingInventory().getOrDefault(building, 0));
 
     // We should be able to refund either the first or second purchase, or both of them together.
-    double firstRefund = -secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST);
-    double secondRefund = -secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_SECOND);
-    double combinedRefund = -secondPurchased.getTransactionalBuildingAmount(building, -TO_BUY_FIRST - TO_BUY_SECOND);
+    double firstRefund = -secondPurchased.getBuildingTransactionBill(building, -TO_BUY_FIRST);
+    double secondRefund = -secondPurchased.getBuildingTransactionBill(building, -TO_BUY_SECOND);
+    double combinedRefund = -secondPurchased.getBuildingTransactionBill(building, -TO_BUY_FIRST - TO_BUY_SECOND);
 
     // Let's refund just the first purchase.
     CookieClicker firstRefunded = secondPurchased.transactBuildings(building, -TO_BUY_FIRST);
@@ -267,7 +267,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     CookieClicker impl = getImplementation();
     double upgradeNPPrice = impl.getUpgradePrice(UPGRADE_NO_PREREQS);
     double upgradePPrice = impl.getUpgradePrice(UPGRADE_PREREQS);
-    double prereqPrice = impl.getTransactionalBuildingAmount(PREREQUISITES, 1);
+    double prereqPrice = impl.getBuildingTransactionBill(PREREQUISITES, 1);
     // We assume buying these items consecutively doesn't change price.
 
     CookieClicker purchaseReady = impl.adjustBank(upgradeNPPrice + upgradePPrice + prereqPrice);
@@ -384,7 +384,7 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
     // I assume we don't already own a mock purchase.
     assertEquals(0, impl.getRate(PURCHASE));
 
-    double purchasePrice = impl.getTransactionalBuildingAmount(PURCHASE, 1);
+    double purchasePrice = impl.getBuildingTransactionBill(PURCHASE, 1);
     CookieClicker purchased = impl.adjustBank(purchasePrice).transactBuildings(PURCHASE, 1);
     // I assume whatever happens with building rates that there is at least some amount of income.
     assertTrue(purchased.getRate(PURCHASE) > 0);
@@ -403,17 +403,17 @@ public interface CookieClickerTest extends SavedCookieClickerTest {
 
     CookieClicker impl = getImplementation();
     assertThrows(NullPointerException.class,
-            () -> impl.getTransactionalBuildingAmount(null, 0));
+            () -> impl.getBuildingTransactionBill(null, 0));
     // I assume that there are currently no mock purchases already owned,
     // then we can't query the refund price.
     assertThrows(IllegalArgumentException.class,
-            () -> impl.getTransactionalBuildingAmount(PURCHASE, -1));
+            () -> impl.getBuildingTransactionBill(PURCHASE, -1));
 
     // We can give ourselves one purchase, but it'd still be wrong to query for the refund of two.
-    double purchasePrice = impl.getTransactionalBuildingAmount(PURCHASE, 1);
+    double purchasePrice = impl.getBuildingTransactionBill(PURCHASE, 1);
     CookieClicker onePurchased = impl.adjustBank(purchasePrice).transactBuildings(PURCHASE, 1);
     assertThrows(IllegalArgumentException.class,
-            () -> onePurchased.getTransactionalBuildingAmount(PURCHASE, -2));
+            () -> onePurchased.getBuildingTransactionBill(PURCHASE, -2));
   }
 
   // I don't test getTransactionalBuildingAmount because too much is up to the implementation.

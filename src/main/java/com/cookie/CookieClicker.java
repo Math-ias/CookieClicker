@@ -40,7 +40,7 @@ public interface CookieClicker extends SavedCookieClicker {
    * Provides a new version of this post-building-sale (buying or selling).
    * <p>
    * The unit price of a building is not necessarily used. Use {@link
-   * #getTransactionalBuildingAmount} to find out what amount will paid or refunded in this sale.
+   * #getBuildingTransactionBill} to find out what amount will paid or refunded in this sale.
    *
    * @param buildingType The building type to purchase or sell.
    * @param amount       The non-zero number of buildings involved in the sale. Positive numbers to
@@ -125,7 +125,7 @@ public interface CookieClicker extends SavedCookieClicker {
    * @throws IllegalArgumentException If there is an attempt to query the refund price for more
    *                                  buildings than are currently owned.
    */
-  double getTransactionalBuildingAmount(BuildingType target, int amount);
+  double getBuildingTransactionBill(BuildingType target, int amount);
 
   /**
    * Returns the price of this upgrade purchase.
