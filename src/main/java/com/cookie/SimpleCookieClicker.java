@@ -279,7 +279,7 @@ public class SimpleCookieClicker implements CookieClicker {
     double upgradePrice = getUpgradePrice(upgrade);
     if (upgrades.contains(upgrade)) {
       throw new IllegalArgumentException("Upgrade already owned cannot purchase.");
-    } else if (!upgrade.purchasable(this)) {
+    } else if (!upgrade.isPurchasable(this)) {
       throw new IllegalArgumentException("Upgrade is not purchasable.");
     } else if (upgradePrice > currentBank) {
       throw new IllegalArgumentException("Unable to afford the current upgrade purchase.");

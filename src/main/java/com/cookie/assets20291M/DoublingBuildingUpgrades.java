@@ -68,7 +68,7 @@ public enum DoublingBuildingUpgrades implements ProductionUpgrade {
   }
 
   @Override
-  public boolean purchasable(CookieClicker stats) {
+  public boolean isPurchasable(CookieClicker stats) {
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     return inventory.getOrDefault(this.target, 0) >= this.targetMinimum;
   }

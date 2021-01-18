@@ -13,7 +13,7 @@ public interface ProductionUpgrade {
    * @return True if this upgrade can be purchased, otherwise false.
    * @throws NullPointerException If stats is null.
    */
-  boolean purchasable(CookieClicker stats);
+  boolean isPurchasable(CookieClicker stats);
 
   /**
    * Returns the contained effects of this upgrade.

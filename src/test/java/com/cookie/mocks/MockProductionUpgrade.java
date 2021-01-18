@@ -23,7 +23,7 @@ public enum MockProductionUpgrade implements ProductionUpgrade {
   }
 
   @Override
-  public boolean purchasable(CookieClicker stats) {
+  public boolean isPurchasable(CookieClicker stats) {
     switch (this) {
       case DUD:
         return true;

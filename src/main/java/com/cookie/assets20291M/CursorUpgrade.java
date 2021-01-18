@@ -44,7 +44,7 @@ public enum CursorUpgrade implements ProductionUpgrade {
   private static final ProductionEffect DOUBLE_CURSOR = new BuildingProductionDoubler(Building.CURSOR);
 
   @Override
-  public boolean purchasable(CookieClicker stats) {
+  public boolean isPurchasable(CookieClicker stats) {
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     Integer cursors = inventory.getOrDefault(Building.CURSOR, 0);
     return cursors >= minimumCursors;

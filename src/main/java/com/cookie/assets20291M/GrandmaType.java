@@ -41,7 +41,7 @@ public enum GrandmaType implements ProductionUpgrade {
   // In this class I go through the trouble of using switch statements to be future-proof.
 
   @Override
-  public boolean purchasable(CookieClicker stats) {
+  public boolean isPurchasable(CookieClicker stats) {
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     Integer grandmas = inventory.getOrDefault(Building.GRANDMA, 0);
     switch (this) {

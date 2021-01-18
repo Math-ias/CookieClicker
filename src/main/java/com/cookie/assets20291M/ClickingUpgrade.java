@@ -49,7 +49,7 @@ public enum ClickingUpgrade implements ProductionUpgrade {
   private static final String UNEXPECTED_BRANCH = "Reached an unexpected branch.";
 
   @Override
-  public boolean purchasable(CookieClicker stats) {
+  public boolean isPurchasable(CookieClicker stats) {
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     long cursors = inventory.getOrDefault(Building.CURSOR, 0);
     switch (this) {
