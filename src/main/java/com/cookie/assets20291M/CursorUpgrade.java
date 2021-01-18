@@ -11,11 +11,20 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The necessary upgrades to X2 cursor (and mouse) production for early-game play.
+ * The necessary upgrades to double cursor (and clicking) production for early-game play.
  */
 public enum CursorUpgrade implements ProductionUpgrade {
+  /**
+   * The first of a long series to upgrade both cursor and clicking production.
+   */
   REINFORCED_INDEX_FINGER(1, 100),
+  /**
+   * The second of a long series to double both cursor and clicking production.
+   */
   CARPAL_TUNNEL_PREVENTION_CREAM(1, 500),
+  /**
+   * The last upgrade implemented to upgrade both cursor and clicking production.
+   */
   AMBIDEXTROUS(10, 10000);
 
   private final long minimumCursors;
@@ -23,15 +32,16 @@ public enum CursorUpgrade implements ProductionUpgrade {
 
   /**
    * Create a new CursorUpgrade.
-   * @param minimumCursors  The minimum number of cursors needed to buy this upgrade.
-   * @param price The price of this upgrade.
+   *
+   * @param minimumCursors The minimum number of cursors to own to unlock purchasing this upgrade.
+   * @param price          The price of this upgrade in cookies.
    */
   CursorUpgrade(long minimumCursors, double price) {
     this.minimumCursors = minimumCursors;
     this.price = price;
   }
 
-  private static ProductionEffect X2CURSOR = new BuildingProductionDoubler(Building.CURSOR);
+  private static final ProductionEffect DOUBLE_CURSOR = new BuildingProductionDoubler(Building.CURSOR);
 
   @Override
   public boolean purchasable(CookieClicker stats) {
@@ -42,7 +52,7 @@ public enum CursorUpgrade implements ProductionUpgrade {
 
   @Override
   public Collection<ProductionEffect> getEffects() {
-    return Set.of(X2CURSOR,
+    return Set.of(DOUBLE_CURSOR,
             ClickingMultiplierEffect.INSTANCE);
   }
 
