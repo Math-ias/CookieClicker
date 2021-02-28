@@ -26,3 +26,4 @@ public interface BuildingProductionEffect extends ProductionEffect {
    */
   BuildingType getTarget();
 }
+

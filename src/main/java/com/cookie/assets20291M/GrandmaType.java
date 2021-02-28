@@ -34,7 +34,8 @@ public enum GrandmaType implements ProductionUpgrade {
     this.extraEffect = extraEffect;
   }
 
-  private final ProductionEffect DOUBLE_GRANDMA = new BuildingProductionDoubler(Building.GRANDMA);
+  private final ProductionEffect DOUBLE_GRANDMA =
+          new BuildingProductionMultiplier(Building.GRANDMA, 2);
 
   private static String UNEXPECTED_BRANCH = "Reached an unexpected branch.";
 

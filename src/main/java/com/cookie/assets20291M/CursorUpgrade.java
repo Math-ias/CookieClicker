@@ -1,5 +1,6 @@
 package com.cookie.assets20291M;
 
+import com.cookie.BuildingProductionEffect;
 import com.cookie.BuildingType;
 import com.cookie.CookieClicker;
 import com.cookie.ClickingProductionEffect;
@@ -41,7 +42,8 @@ public enum CursorUpgrade implements ProductionUpgrade {
     this.price = price;
   }
 
-  private static final ProductionEffect DOUBLE_CURSOR = new BuildingProductionDoubler(Building.CURSOR);
+  private static final ProductionEffect DOUBLE_CURSOR =
+          new BuildingProductionMultiplier(Building.CURSOR, 2);
 
   @Override
   public boolean isPurchasable(CookieClicker stats) {

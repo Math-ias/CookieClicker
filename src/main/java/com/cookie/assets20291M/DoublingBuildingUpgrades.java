@@ -1,5 +1,6 @@
 package com.cookie.assets20291M;
 
+import com.cookie.BuildingProductionEffect;
 import com.cookie.BuildingType;
 import com.cookie.CookieClicker;
 import com.cookie.ProductionEffect;
@@ -64,7 +65,7 @@ public enum DoublingBuildingUpgrades implements ProductionUpgrade {
     this.target = target;
     this.targetMinimum = targetMinimum;
     this.price = price;
-    this.effect = new BuildingProductionDoubler(this.target);
+    this.effect = new BuildingProductionMultiplier(this.target, 2);
   }
 
   @Override
