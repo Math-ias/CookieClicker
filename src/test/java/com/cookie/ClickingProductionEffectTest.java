@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * A collection of tests for ClickingProductionEffect implementations.
  */
 public abstract class ClickingProductionEffectTest {
-  abstract ClickingProductionEffect getImplementation();
+  public abstract ClickingProductionEffect getImplementation();
 
   @Test
   public void testGetEffectIllegalArguments() {
