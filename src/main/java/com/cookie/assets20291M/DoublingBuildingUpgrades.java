@@ -1,6 +1,5 @@
 package com.cookie.assets20291M;
 
-import com.cookie.BuildingProductionEffect;
 import com.cookie.BuildingType;
 import com.cookie.CookieClicker;
 import com.cookie.ProductionEffect;

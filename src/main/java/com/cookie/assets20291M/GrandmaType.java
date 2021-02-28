@@ -9,6 +9,7 @@ import com.cookie.SavedCookieClicker;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -43,6 +44,7 @@ public enum GrandmaType implements ProductionUpgrade {
 
   @Override
   public boolean isPurchasable(CookieClicker stats) {
+    Objects.requireNonNull(stats, "Expected CookieClicker stats to be non-null.");
     Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
     Integer grandmas = inventory.getOrDefault(Building.GRANDMA, 0);
     switch (this) {
@@ -71,6 +73,7 @@ public enum GrandmaType implements ProductionUpgrade {
 
     @Override
     public double getNumber(SavedCookieClicker stats) {
+      Objects.requireNonNull(stats, "Expected CookieClicker stats to be non-null.");
       Map<BuildingType, Integer> inventory = stats.getBuildingInventory();
       return 1 + 0.01 * inventory.getOrDefault(Building.GRANDMA, 0);
     }
