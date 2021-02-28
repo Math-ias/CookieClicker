@@ -1,7 +1,5 @@
 package com.cookie;
 
-import com.cookie.ProductionBuff;
-import com.cookie.ProductionEffect;
 import com.cookie.mocks.MockClickingEffects;
 
 import org.junit.jupiter.api.Test;
@@ -10,7 +8,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,7 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class ProductionBuffTest {
   /**
    * Returns an implementation of production buff to test.
-   * @return  A new instance of the production buff to test. This should have at least two ticks left.
+   *
+   * @return A new instance of the production buff to test. This should have at least two ticks
+   * left.
    */
   abstract ProductionBuff getImplementation();
 
@@ -44,7 +43,10 @@ public abstract class ProductionBuffTest {
     // It should also ensure this optional is non-empty.
     Optional<ProductionBuff> nonWarped = impl.warp(0);
     assertTrue(nonWarped.isPresent());
-    assertEquals(impl, nonWarped.get());
+    assertEquals(impl.getTimeLeft(), nonWarped.get().getTimeLeft());
+    assertEquals(impl.getTimeTotal(), nonWarped.get().getTimeTotal());
+    assertEquals(impl.getEffects(), nonWarped.get().getEffects());
+
 
     // Warping by one second should decrease the number of ticks by one.
     // Everything else should be the same.
@@ -76,58 +78,5 @@ public abstract class ProductionBuffTest {
     // add
     assertThrows(UnsupportedOperationException.class,
             () -> effects.add(MockClickingEffects.TIMES2));
-  }
-
-  /**
-   * Verify that the ProductionBuff implementation correctly calculates equalness.
-   * <p>
-   * This test depends on correct warp behavior.
-   */
-  @Test
-  public void testEqualsBehavior() {
-    // This testing could be incomplete. I left it without all permutations of properties.
-    ProductionBuff impl = getImplementation();
-    assertEquals(impl, new BuffWrapper(impl));
-    Optional<ProductionBuff> warped = impl.warp(1);
-    assert warped.isPresent(); // Should be true according to getImplementation's promise.
-    assertNotEquals(impl, warped.get());
-  }
-
-  /**
-   * A ProductionBuff to another production buff and return the same properties.
-   * <p>
-   * This was created to test equals behavior and break if just using basic object comparison.
-   */
-  class BuffWrapper implements ProductionBuff {
-
-    ProductionBuff buff;
-
-    /**
-     * Create a new BuffWrapper around an existing ProductionBuff.
-     * @param buff  The ProductionBuff to wrap.
-     */
-    public BuffWrapper(ProductionBuff buff) {
-      this.buff = buff;
-    }
-
-    @Override
-    public long getTimeLeft() {
-      return buff.getTimeLeft();
-    }
-
-    @Override
-    public long getTimeTotal() {
-      return buff.getTimeTotal();
-    }
-
-    @Override
-    public Optional<ProductionBuff> warp(long ticks) {
-      return buff.warp(ticks).map(BuffWrapper::new);
-    }
-
-    @Override
-    public Collection<ProductionEffect> getEffects() {
-      return buff.getEffects();
-    }
   }
 }

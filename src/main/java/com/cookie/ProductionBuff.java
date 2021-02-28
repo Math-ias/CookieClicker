@@ -36,30 +36,4 @@ public interface ProductionBuff {
    * @return The collection of effects this buff has on production.
    */
   Collection<ProductionEffect> getEffects();
-
-  /**
-   * Indicates if some other ProductionBuff is equal to this one.
-   * <p>
-   * The other object is equal to this ProductionBuff, if and only if, it is also a ProductionBuff,
-   * and both have ...
-   * <ul>
-   *   <li>Equal time left.</li>
-   *   <li>Equal time total.</li>
-   *   <li>Equal collections of effects. See {@link ProductionEffect}'s documentation for an equals recommendation.</li>
-   * </ul>
-   *
-   * @param o The object to compare to.
-   * @return If this ProductionBuff is equal to the given object.
-   */
-  boolean equals(Object o);
-
-  /**
-   * Returns the hash code of this ProductionBuff.
-   * <p>
-   * The hashCode should be calculated as the Objects.hash of the time left, time total, and effects
-   * collection.
-   *
-   * @return The hashCode of this ProductionBuff.
-   */
-  int hashCode();
 }
